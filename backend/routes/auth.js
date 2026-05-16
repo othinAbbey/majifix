@@ -7,12 +7,12 @@ const router = express.Router();
 
 // Register
 router.post('/register', async (req, res) => {
-  const { username, password, email, role } = req.body;
+  const { username, password, email, contact_number, role, district, village, latitude, longitude } = req.body;
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const result = await pool.query(
-      'INSERT INTO users (username, password_hash, email, role) VALUES ($1, $2, $3, $4) RETURNING id',
-      [username, hashedPassword, email, role]
+      'INSERT INTO users (username, password_hash, email, contact_number, role, district, village, latitude, longitude) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id',
+      [username, hashedPassword, email, contact_number || null, role, district || null, village || null, latitude || null, longitude || null]
     );
     res.status(201).json({ message: 'User registered', userId: result.rows[0].id });
   } catch (err) {

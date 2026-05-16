@@ -1,6 +1,7 @@
 const express = require('express');
 const pool = require('../db');
 const authenticateToken = require('../middleware/auth');
+const { createRepairLog, notifyAdminsAndDistrictOfficers } = require('../utils/faultHelpers');
 
 const router = express.Router();
 
@@ -26,14 +27,45 @@ router.get('/', async (req, res) => {
 
 // Create repair
 router.post('/', async (req, res) => {
-  const { assignment_id, notes, cost } = req.body;
+  const {
+    assignment_id,
+    transport_cost,
+    materials_cost,
+    problem_found,
+    remedy,
+    additional_notes,
+  } = req.body;
   const technician_id = req.user.id; // From token
   try {
-    const result = await pool.query(
-      'INSERT INTO repairs (assignment_id, notes, cost, technician_id) VALUES ($1, $2, $3, $4) RETURNING *',
-      [assignment_id, notes, cost, technician_id]
+    const repair = await createRepairLog({
+      assignmentId: assignment_id,
+      technicianId: technician_id,
+      transportCost: transport_cost,
+      materialsCost: materials_cost,
+      problemFound: problem_found,
+      remedy,
+      additionalNotes: additional_notes,
+    });
+
+    const repairInfo = await pool.query(
+      `SELECT wp.district, wp.name AS water_point_name
+       FROM assignments a
+       JOIN fault_reports fr ON a.fault_report_id = fr.id
+       JOIN water_points wp ON fr.water_point_id = wp.id
+       WHERE a.id = $1`,
+      [assignment_id]
     );
-    res.status(201).json(result.rows[0]);
+
+    if (repairInfo.rows.length) {
+      const { district, water_point_name } = repairInfo.rows[0];
+      await notifyAdminsAndDistrictOfficers(
+        district,
+        `Repair log submitted for assignment #${assignment_id} at ${water_point_name}. Status: ${repair.repair_status}.`,
+        'repair_progress'
+      );
+    }
+
+    res.status(201).json(repair);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -42,11 +74,20 @@ router.post('/', async (req, res) => {
 // Update repair
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { notes, cost } = req.body;
+  const { notes, cost, transport_cost, materials_cost, problem_found, remedy, additional_notes } = req.body;
   try {
     const result = await pool.query(
-      'UPDATE repairs SET notes = $1, cost = $2 WHERE id = $3 RETURNING *',
-      [notes, cost, id]
+      `UPDATE repairs
+       SET notes = $1,
+           cost = $2,
+           transport_cost = $3,
+           materials_cost = $4,
+           problem_found = $5,
+           remedy = $6,
+           additional_notes = $7
+       WHERE id = $8
+       RETURNING *`,
+      [notes, cost, transport_cost, materials_cost, problem_found, remedy, additional_notes, id]
     );
     if (result.rows.length === 0) return res.status(404).json({ error: 'Repair not found' });
     res.json(result.rows[0]);

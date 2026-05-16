@@ -1,6 +1,7 @@
 const express = require('express');
 const pool = require('../db');
 const authenticateToken = require('../middleware/auth');
+const { createNotification, notifyAdminsAndDistrictOfficers } = require('../utils/faultHelpers');
 
 const router = express.Router();
 
@@ -44,13 +45,45 @@ router.get('/:id', async (req, res) => {
 
 // Create assignment
 router.post('/', async (req, res) => {
-  const { fault_report_id, technician_id, priority } = req.body;
+  const { fault_report_id, technician_id, priority, status } = req.body || {};
+
+  if (!fault_report_id || !technician_id) {
+    return res.status(400).json({ error: 'fault_report_id and technician_id are required' });
+  }
+
   try {
     const result = await pool.query(
-      'INSERT INTO assignments (fault_report_id, technician_id, priority) VALUES ($1, $2, $3) RETURNING *',
-      [fault_report_id, technician_id, priority || 'medium']
+      'INSERT INTO assignments (fault_report_id, technician_id, priority, status) VALUES ($1, $2, $3, $4) RETURNING *',
+      [fault_report_id, technician_id, priority || 'medium', status || 'assigned']
     );
-    res.status(201).json(result.rows[0]);
+    const assignment = result.rows[0];
+
+    const technicianResult = await pool.query('SELECT id, username FROM users WHERE id = $1 AND role = $2', [technician_id, 'technician']);
+    if (technicianResult.rows.length) {
+      await createNotification(
+        technician_id,
+        `New assignment #${assignment.id} has been created for fault report #${fault_report_id}.`,
+        'assignment_created'
+      );
+    }
+
+    const faultInfo = await pool.query(
+      `SELECT wp.district, wp.name AS water_point_name
+       FROM fault_reports fr
+       JOIN water_points wp ON fr.water_point_id = wp.id
+       WHERE fr.id = $1`,
+      [fault_report_id]
+    );
+    if (faultInfo.rows.length) {
+      const { district, water_point_name } = faultInfo.rows[0];
+      await notifyAdminsAndDistrictOfficers(
+        district,
+        `Assignment #${assignment.id} created for ${water_point_name}.`,
+        'assignment_created'
+      );
+    }
+
+    res.status(201).json(assignment);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -59,7 +92,10 @@ router.post('/', async (req, res) => {
 // Update assignment status
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { status } = req.body;
+  const { status } = req.body || {};
+  if (!status) {
+    return res.status(400).json({ error: 'status is required' });
+  }
   try {
     const result = await pool.query(
       'UPDATE assignments SET status = $1 WHERE id = $2 RETURNING *',

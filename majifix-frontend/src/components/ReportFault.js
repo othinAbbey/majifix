@@ -25,7 +25,7 @@ const ReportFault = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/fault-reports', {
+      const response = await axios.post('http://localhost:5000/api/fault-reports', {
         water_point_id: waterPointId,
         issue_type: issueType,
         description,
@@ -33,7 +33,8 @@ const ReportFault = () => {
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setMessage('Fault reported successfully');
+      const assignment = response.data.assignment;
+      setMessage(`Fault reported successfully${assignment ? ` and assigned to ${assignment.technician.username}` : ''}`);
     } catch (err) {
       setMessage('Error reporting fault');
     }

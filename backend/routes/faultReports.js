@@ -1,6 +1,13 @@
 const express = require('express');
 const pool = require('../db');
 const authenticateToken = require('../middleware/auth');
+const {
+  findWaterPointById,
+  createFaultReport,
+  assignTechnicianToFault,
+  notifyAdminsAndDistrictOfficers,
+  updateWaterPointStatus,
+} = require('../utils/faultHelpers');
 
 const router = express.Router();
 
@@ -31,14 +38,38 @@ router.get('/:id', async (req, res) => {
 
 // Create fault report
 router.post('/', async (req, res) => {
-  const { water_point_id, issue_type, description, image_url } = req.body;
+  const { water_point_id, issue_type, description, image_url, requested_funds, requested_funds_amount, requested_funds_reason } = req.body;
   const reported_by = req.user.id; // From token
   try {
-    const result = await pool.query(
-      'INSERT INTO fault_reports (water_point_id, issue_type, description, image_url, reported_by) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [water_point_id, issue_type, description, image_url, reported_by]
+    const waterPoint = await findWaterPointById(water_point_id);
+    if (!waterPoint) {
+      return res.status(400).json({ error: 'Invalid water point selected' });
+    }
+
+    const report = await createFaultReport(
+      water_point_id,
+      issue_type,
+      description,
+      reported_by,
+      requested_funds || false,
+      requested_funds_amount || null,
+      requested_funds_reason || null
     );
-    res.status(201).json(result.rows[0]);
+
+    await updateWaterPointStatus(water_point_id, 'broken');
+    await notifyAdminsAndDistrictOfficers(
+      waterPoint.district,
+      `A new fault report #${report.id} was submitted for ${waterPoint.name}.`,
+      'fault_report'
+    );
+
+    const assignment = await assignTechnicianToFault(report.id, waterPoint);
+    const responsePayload = { ...report };
+    if (assignment) {
+      responsePayload.assignment = assignment;
+    }
+
+    res.status(201).json(responsePayload);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -15,6 +15,8 @@ router.get('/', async (req, res) => {
     const broken = await pool.query("SELECT COUNT(*) as broken FROM water_points WHERE status = 'broken'");
     const faults = await pool.query('SELECT COUNT(*) as total FROM fault_reports');
     const assignments = await pool.query('SELECT COUNT(*) as total FROM assignments');
+    const pending = await pool.query("SELECT COUNT(*) as pending FROM assignments WHERE status = 'pending'");
+    const inProgress = await pool.query("SELECT COUNT(*) as in_progress FROM assignments WHERE status = 'in_progress'");
     const completed = await pool.query("SELECT COUNT(*) as completed FROM assignments WHERE status = 'completed'");
 
     res.json({
@@ -23,6 +25,8 @@ router.get('/', async (req, res) => {
       broken: parseInt(broken.rows[0].broken),
       faults: parseInt(faults.rows[0].total),
       assignments: parseInt(assignments.rows[0].total),
+      pending: parseInt(pending.rows[0].pending),
+      in_progress: parseInt(inProgress.rows[0].in_progress),
       completed: parseInt(completed.rows[0].completed)
     });
   } catch (err) {

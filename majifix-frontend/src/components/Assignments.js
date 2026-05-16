@@ -34,11 +34,17 @@ const Assignments = () => {
   };
 
   const fetchTechnicians = async () => {
-    // For simplicity, assume all users with role technician
-    // In real app, filter by role
     const token = localStorage.getItem('token');
-    // This is a placeholder; ideally have a users endpoint
-    setTechnicians([{ id: 1, username: 'tech1' }, { id: 2, username: 'tech2' }]); // Mock
+    if (!token) return;
+    try {
+      const response = await axios.get('http://localhost:5000/api/technicians', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setTechnicians(response.data);
+    } catch (err) {
+      console.error('Error loading technicians', err);
+      setTechnicians([]);
+    }
   };
 
   const handleAssign = async () => {

@@ -7,8 +7,11 @@ const Repairs = () => {
   const [assignments, setAssignments] = useState([]);
   const [showAdd, setShowAdd] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState('');
+  const [transportCost, setTransportCost] = useState('');
+  const [materialsCost, setMaterialsCost] = useState('');
+  const [problemFound, setProblemFound] = useState('');
+  const [remedy, setRemedy] = useState('');
   const [notes, setNotes] = useState('');
-  const [cost, setCost] = useState('');
 
   useEffect(() => {
     fetchRepairs();
@@ -35,8 +38,11 @@ const Repairs = () => {
     const token = localStorage.getItem('token');
     await axios.post('http://localhost:5000/api/repairs', {
       assignment_id: selectedAssignment,
-      notes,
-      cost
+      transport_cost: transportCost,
+      materials_cost: materialsCost,
+      problem_found: problemFound,
+      remedy,
+      additional_notes: notes
     }, {
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -53,8 +59,12 @@ const Repairs = () => {
           <tr>
             <th>Water Point</th>
             <th>Technician</th>
+            <th>Problem</th>
+            <th>Remedy</th>
+            <th>Transport</th>
+            <th>Materials</th>
             <th>Notes</th>
-            <th>Cost</th>
+            <th>Total Cost</th>
             <th>Date</th>
           </tr>
         </thead>
@@ -63,7 +73,11 @@ const Repairs = () => {
             <tr key={repair.id}>
               <td>{repair.water_point_name}</td>
               <td>{repair.technician_name}</td>
-              <td>{repair.notes}</td>
+              <td>{repair.problem_found}</td>
+              <td>{repair.remedy}</td>
+              <td>{repair.transport_cost}</td>
+              <td>{repair.materials_cost}</td>
+              <td>{repair.additional_notes}</td>
               <td>{repair.cost}</td>
               <td>{new Date(repair.repair_date).toLocaleDateString()}</td>
             </tr>
@@ -79,19 +93,31 @@ const Repairs = () => {
           <Form.Group className="mb-3">
             <Form.Label>Assignment</Form.Label>
             <Form.Select value={selectedAssignment} onChange={(e) => setSelectedAssignment(e.target.value)}>
-              <option>Select Assignment</option>
+              <option value="">Select Assignment</option>
               {assignments.map(a => (
                 <option key={a.id} value={a.id}>{a.issue_type}: {a.description}</option>
               ))}
             </Form.Select>
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Notes</Form.Label>
-            <Form.Control as="textarea" rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} />
+            <Form.Label>Transport cost (KES)</Form.Label>
+            <Form.Control type="number" value={transportCost} onChange={(e) => setTransportCost(e.target.value)} />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Cost</Form.Label>
-            <Form.Control type="number" value={cost} onChange={(e) => setCost(e.target.value)} />
+            <Form.Label>Materials cost (KES)</Form.Label>
+            <Form.Control type="number" value={materialsCost} onChange={(e) => setMaterialsCost(e.target.value)} />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Problem found</Form.Label>
+            <Form.Control type="text" value={problemFound} onChange={(e) => setProblemFound(e.target.value)} placeholder="e.g. broken seals" />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Remedy</Form.Label>
+            <Form.Control type="text" value={remedy} onChange={(e) => setRemedy(e.target.value)} placeholder="e.g. new part bought" />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Additional notes</Form.Label>
+            <Form.Control as="textarea" rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} />
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>

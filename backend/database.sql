@@ -6,7 +6,12 @@ CREATE TABLE users (
   username VARCHAR(50) UNIQUE NOT NULL,
   password_hash VARCHAR(255) NOT NULL,
   email VARCHAR(100) UNIQUE,
+  contact_number VARCHAR(30),
   role VARCHAR(20) NOT NULL CHECK (role IN ('admin', 'district_officer', 'technician', 'ngo_staff')),
+  district VARCHAR(50),
+  village VARCHAR(50),
+  latitude DECIMAL(10, 8),
+  longitude DECIMAL(11, 8),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -15,13 +20,16 @@ CREATE TABLE water_points (
   id SERIAL PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   district VARCHAR(50) NOT NULL,
+  parish VARCHAR(50),
   village VARCHAR(50) NOT NULL,
+  water_point_number VARCHAR(50),
   latitude DECIMAL(10, 8),
   longitude DECIMAL(11, 8),
   install_date DATE,
   water_source_type VARCHAR(50),
   status VARCHAR(20) DEFAULT 'working' CHECK (status IN ('working', 'broken', 'maintenance')),
   managing_org VARCHAR(100),
+  created_via_ussd BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -32,6 +40,9 @@ CREATE TABLE fault_reports (
   issue_type VARCHAR(50) NOT NULL,
   description TEXT,
   image_url VARCHAR(255),
+  requested_funds BOOLEAN DEFAULT FALSE,
+  requested_funds_amount DECIMAL(10,2),
+  requested_funds_reason TEXT,
   reported_by INTEGER REFERENCES users(id),
   timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -53,6 +64,12 @@ CREATE TABLE repairs (
   repair_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   notes TEXT,
   cost DECIMAL(10, 2),
+  transport_cost DECIMAL(10,2),
+  materials_cost DECIMAL(10,2),
+  problem_found VARCHAR(100),
+  remedy VARCHAR(100),
+  additional_notes TEXT,
+  repair_status VARCHAR(20) DEFAULT 'reported',
   technician_id INTEGER REFERENCES users(id)
 );
 

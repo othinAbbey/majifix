@@ -281,6 +281,23 @@ JWT_SECRET=super_secret_key_change_in_production
 NODE_ENV=development
 
 # Optional for SMS
+
+## USSD Integration
+This project now supports a generic USSD webhook endpoint at `POST /api/ussd`.
+
+Example request body:
+```json
+{
+  "sessionId": "12345",
+  "phoneNumber": "+255123456789",
+  "text": ""
+}
+```
+
+Response payload returns `response` and `action` values for JSON-based USSD providers.
+
+For Africa's Talking, use the dedicated endpoint `POST /api/ussd/at` and return plain-text USSD responses with `CON` / `END` prefixes.
+
 TWILIO_ACCOUNT_SID=your_twilio_sid
 TWILIO_AUTH_TOKEN=your_token
 TWILIO_PHONE=+1234567890

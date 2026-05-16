@@ -60,6 +60,9 @@ const Navigation = () => {
             <Nav.Link as={Link} to="/report-fault">
               Report Fault
             </Nav.Link>
+            <Nav.Link as={Link} to="/add-water-point">
+              Add Water Point
+            </Nav.Link>
             <Nav.Link as={Link} to="/assignments">
               Assignments
             </Nav.Link>
@@ -69,6 +72,11 @@ const Navigation = () => {
             <Nav.Link as={Link} to="/analytics">
               Analytics
             </Nav.Link>
+            {user?.role === 'admin' && (
+              <Nav.Link as={Link} to="/technicians">
+                Technicians
+              </Nav.Link>
+            )}
             <Nav.Link as={Link} to="/notifications">
               Notifications
               {unreadCount > 0 && (

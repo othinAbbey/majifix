@@ -1,12 +1,12 @@
 -- MajiFix Test Data Seeder
 
 -- Insert test users
-INSERT INTO users (username, password_hash, email, role) VALUES
-('admin', '$2a$10$PY8KWlGDj9OJiLhJzM3Nee0dLhLvJN5UQRoS3nZKBKT0F/0TbQXZm', 'admin@majifix.com', 'admin'),
-('district_officer', '$2a$10$PY8KWlGDj9OJiLhJzM3Nee0dLhLvJN5UQRoS3nZKBKT0F/0TbQXZm', 'officer@majifix.com', 'district_officer'),
-('tech1', '$2a$10$PY8KWlGDj9OJiLhJzM3Nee0dLhLvJN5UQRoS3nZKBKT0F/0TbQXZm', 'tech1@majifix.com', 'technician'),
-('tech2', '$2a$10$PY8KWlGDj9OJiLhJzM3Nee0dLhLvJN5UQRoS3nZKBKT0F/0TbQXZm', 'tech2@majifix.com', 'technician'),
-('ngo_staff', '$2a$10$PY8KWlGDj9OJiLhJzM3Nee0dLhLvJN5UQRoS3nZKBKT0F/0TbQXZm', 'ngo@majifix.com', 'ngo_staff');
+INSERT INTO users (username, password_hash, email, role, district, village) VALUES
+('admin', '$2a$10$PY8KWlGDj9OJiLhJzM3Nee0dLhLvJN5UQRoS3nZKBKT0F/0TbQXZm', 'admin@majifix.com', 'admin', NULL, NULL),
+('district_officer', '$2a$10$PY8KWlGDj9OJiLhJzM3Nee0dLhLvJN5UQRoS3nZKBKT0F/0TbQXZm', 'officer@majifix.com', 'district_officer', NULL, NULL),
+('tech1', '$2a$10$PY8KWlGDj9OJiLhJzM3Nee0dLhLvJN5UQRoS3nZKBKT0F/0TbQXZm', 'tech1@majifix.com', 'technician', 'Kilimanjaro', 'Moshi'),
+('tech2', '$2a$10$PY8KWlGDj9OJiLhJzM3Nee0dLhLvJN5UQRoS3nZKBKT0F/0TbQXZm', 'tech2@majifix.com', 'technician', 'Dar es Salaam', 'Bagamoyo'),
+('ngo_staff', '$2a$10$PY8KWlGDj9OJiLhJzM3Nee0dLhLvJN5UQRoS3nZKBKT0F/0TbQXZm', 'ngo@majifix.com', 'ngo_staff', NULL, NULL);
 
 -- Insert test water points
 INSERT INTO water_points (name, district, village, latitude, longitude, install_date, water_source_type, status, managing_org) VALUES

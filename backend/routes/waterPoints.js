@@ -30,11 +30,24 @@ router.get('/:id', async (req, res) => {
 
 // Create water point
 router.post('/', async (req, res) => {
-  const { name, district, village, latitude, longitude, install_date, water_source_type, status, managing_org } = req.body;
+  const {
+    name,
+    district,
+    parish,
+    village,
+    water_point_number,
+    latitude,
+    longitude,
+    install_date,
+    water_source_type,
+    status,
+    managing_org,
+    created_via_ussd,
+  } = req.body;
   try {
     const result = await pool.query(
-      'INSERT INTO water_points (name, district, village, latitude, longitude, install_date, water_source_type, status, managing_org) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
-      [name, district, village, latitude, longitude, install_date, water_source_type, status, managing_org]
+      'INSERT INTO water_points (name, district, parish, village, water_point_number, latitude, longitude, install_date, water_source_type, status, managing_org, created_via_ussd) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *',
+      [name, district, parish, village, water_point_number, latitude, longitude, install_date, water_source_type, status, managing_org, created_via_ussd || false]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -45,11 +58,24 @@ router.post('/', async (req, res) => {
 // Update water point
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, district, village, latitude, longitude, install_date, water_source_type, status, managing_org } = req.body;
+  const {
+    name,
+    district,
+    parish,
+    village,
+    water_point_number,
+    latitude,
+    longitude,
+    install_date,
+    water_source_type,
+    status,
+    managing_org,
+    created_via_ussd,
+  } = req.body;
   try {
     const result = await pool.query(
-      'UPDATE water_points SET name = $1, district = $2, village = $3, latitude = $4, longitude = $5, install_date = $6, water_source_type = $7, status = $8, managing_org = $9 WHERE id = $10 RETURNING *',
-      [name, district, village, latitude, longitude, install_date, water_source_type, status, managing_org, id]
+      'UPDATE water_points SET name = $1, district = $2, parish = $3, village = $4, water_point_number = $5, latitude = $6, longitude = $7, install_date = $8, water_source_type = $9, status = $10, managing_org = $11, created_via_ussd = $12 WHERE id = $13 RETURNING *',
+      [name, district, parish, village, water_point_number, latitude, longitude, install_date, water_source_type, status, managing_org, created_via_ussd || false, id]
     );
     if (result.rows.length === 0) return res.status(404).json({ error: 'Water point not found' });
     res.json(result.rows[0]);

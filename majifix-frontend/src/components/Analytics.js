@@ -65,8 +65,26 @@ const Analytics = () => {
         <Col md={4}>
           <Card className="text-center mb-4">
             <Card.Body>
+              <Card.Title>{data.pending || 0}</Card.Title>
+              <Card.Text>Pending Assignments</Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+      <Row>
+        <Col md={4}>
+          <Card className="text-center mb-4">
+            <Card.Body>
               <Card.Title>{data.completed || 0}</Card.Title>
               <Card.Text>Completed Repairs</Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={4}>
+          <Card className="text-center mb-4">
+            <Card.Body>
+              <Card.Title>{data.in_progress || 0}</Card.Title>
+              <Card.Text>In Progress</Card.Text>
             </Card.Body>
           </Card>
         </Col>

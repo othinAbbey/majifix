@@ -463,10 +463,51 @@ curl -X POST http://localhost:5000/api/auth/login \
   }'
 ```
 
+### Create Technician (admin only)
+```bash
+curl -X POST http://localhost:5000/api/technicians \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_ADMIN_TOKEN" \
+  -d '{
+    "username": "tech3",
+    "password": "password123",
+    "email": "tech3@majifix.com",
+    "district": "Kilimanjaro",
+    "village": "Moshi",
+    "latitude": "-3.3667",
+    "longitude": "37.6667"
+  }'
+```
+
+### Get Technicians (admin or district officer)
+```bash
+curl -X GET http://localhost:5000/api/technicians \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
 ### Get Water Points (with token)
 ```bash
 curl -X GET http://localhost:5000/api/water-points \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
+```
+
+### Africa's Talking USSD Webhook
+POST /api/ussd/at
+- Content-Type: application/x-www-form-urlencoded
+- Required fields: `sessionId`, `serviceCode`, `phoneNumber`, `text`
+
+Example form body:
+```
+sessionId=abc123&serviceCode=*123#&phoneNumber=+255712345678&text=
+```
+
+Example response:
+```
+CON Welcome to MajiFix USSD.
+1. Report a fault
+2. Check report status
+3. Get water point info
+4. Help
 ```
 
 ---
