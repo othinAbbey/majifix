@@ -7,6 +7,7 @@ const {
   assignTechnicianToFault,
   notifyAdminsAndDistrictOfficers,
   updateWaterPointStatus,
+  sendSMSToAdmins,
 } = require('../utils/faultHelpers');
 
 const router = express.Router();
@@ -61,6 +62,11 @@ router.post('/', async (req, res) => {
       waterPoint.district,
       `A new fault report #${report.id} was submitted for ${waterPoint.name}.`,
       'fault_report'
+    );
+
+    // Send SMS to admins about new fault report
+    await sendSMSToAdmins(
+      `MajiFix: New fault report #${report.id} for ${waterPoint.name} (${issue_type}). Check the app for details.`
     );
 
     const assignment = await assignTechnicianToFault(report.id, waterPoint);

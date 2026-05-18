@@ -1,7 +1,7 @@
 const express = require('express');
 const pool = require('../db');
 const authenticateToken = require('../middleware/auth');
-const { createNotification, notifyAdminsAndDistrictOfficers } = require('../utils/faultHelpers');
+const { createNotification, notifyAdminsAndDistrictOfficers, sendSMS } = require('../utils/faultHelpers');
 
 const router = express.Router();
 
@@ -58,13 +58,22 @@ router.post('/', async (req, res) => {
     );
     const assignment = result.rows[0];
 
-    const technicianResult = await pool.query('SELECT id, username FROM users WHERE id = $1 AND role = $2', [technician_id, 'technician']);
+    const technicianResult = await pool.query('SELECT id, username, contact_number FROM users WHERE id = $1 AND role = $2', [technician_id, 'technician']);
     if (technicianResult.rows.length) {
+      const technician = technicianResult.rows[0];
       await createNotification(
         technician_id,
         `New assignment #${assignment.id} has been created for fault report #${fault_report_id}.`,
         'assignment_created'
       );
+      
+      // Send SMS to technician
+      if (technician.contact_number) {
+        await sendSMS(
+          technician.contact_number,
+          `MajiFix: You have been assigned task #${assignment.id}. Fault report #${fault_report_id} needs your attention. Please check the app for details.`
+        );
+      }
     }
 
     const faultInfo = await pool.query(

@@ -1,4 +1,11 @@
 const pool = require('../db');
+const AfricasTalking = require('africastalking');
+
+const AT_USERNAME = process.env.AT_USERNAME || 'sandbox';
+const AT_API_KEY = process.env.AT_API_KEY;
+
+const atClient = AT_API_KEY ? AfricasTalking({ username: AT_USERNAME, apiKey: AT_API_KEY }) : null;
+const smsService = atClient ? atClient.SMS : null;
 
 const normalizePhoneNumber = (phoneNumber) => {
   return String(phoneNumber || '').replace(/\D/g, '');
@@ -19,6 +26,36 @@ const notifyAdminsAndDistrictOfficers = async (district, message, type) => {
      WHERE role = 'admin' OR (role = 'district_officer' AND district = $3)`,
     [message, type, district]
   );
+};
+
+const sendSMS = async (phoneNumber, message) => {
+  if (!smsService || !phoneNumber) {
+    console.log(`[SMS] Would send to ${phoneNumber}: ${message}`);
+    return;
+  }
+  try {
+    const normalizedPhone = normalizePhoneNumber(phoneNumber);
+    if (!normalizedPhone) {
+      console.log('Invalid phone number for SMS');
+      return;
+    }
+    const result = await smsService.send({
+      to: [normalizedPhone],
+      message: message,
+    });
+    console.log('SMS sent:', result);
+  } catch (err) {
+    console.error('SMS send error:', err.message || err);
+  }
+};
+
+const sendSMSToAdmins = async (message) => {
+  const result = await pool.query(
+    `SELECT contact_number FROM users WHERE role = 'admin' AND contact_number IS NOT NULL`
+  );
+  for (const admin of result.rows) {
+    await sendSMS(admin.contact_number, message);
+  }
 };
 
 const findWaterPointById = async (id) => {
@@ -171,6 +208,8 @@ module.exports = {
   normalizePhoneNumber,
   createNotification,
   notifyAdminsAndDistrictOfficers,
+  sendSMS,
+  sendSMSToAdmins,
   findWaterPointById,
   createWaterPoint,
   findTechniciansByLocation,
