@@ -1,13 +1,8 @@
-Nice — this is already solid. Now we just make it README-ready so it doesn’t look like a raw draft dump.
-
-Here’s a clean version you can paste straight into `README.md` 👇
-
-```md
 # 🚰 MajiFix MVP Features
 
 The MVP (Minimum Viable Product) focuses only on the core features needed to solve the main problem:
 
-> “Broken rural water systems are not reported and repaired efficiently.”
+“Broken rural water systems are not reported and repaired efficiently.”
 
 Keep it simple, usable, and deployable fast.
 
@@ -172,46 +167,5 @@ Avoid for now:
 - Machine learning  
 - Heavy analytics  
 
----
 
-## 🎯 MVP Success Criteria
 
-The MVP is successful if it can:
-- Register water points  
-- Report faults  
-- Assign technicians  
-- Track repairs  
-- Reduce response time  
-- Generate basic reports  
-
----
-
-## ⏱️ Suggested Build Timeline
-
-### Week 1
-- Database design  
-- Backend setup  
-- Authentication  
-
-### Week 2
-- Water point module  
-- Fault reporting  
-
-### Week 3
-- Technician assignment  
-- Repair tracking  
-
-### Week 4
-- Dashboard  
-- Testing & deployment  
-
----
-
-💡 Estimated delivery: **4–6 weeks for a working MVP**
-```
-
-If you want next step, I can also:
-
-* turn this into a **full README with badges + setup instructions**
-* or generate a **GitHub-ready project structure**
-* or even connect it to your backend (Node/Express + Prisma style)
