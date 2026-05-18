@@ -11,7 +11,7 @@ const Notifications = () => {
 
   const fetchNotifications = async () => {
     const token = localStorage.getItem('token');
-    const response = await axios.get('http://localhost:5000/api/notifications', {
+    const response = await axios.get('https://majifix.onrender.com/api/notifications', {
       headers: { Authorization: `Bearer ${token}` }
     });
     setNotifications(response.data);
@@ -19,7 +19,7 @@ const Notifications = () => {
 
   const markAsRead = async (id) => {
     const token = localStorage.getItem('token');
-    await axios.put(`http://localhost:5000/api/notifications/${id}/read`, {}, {
+    await axios.put(`https://majifix.onrender.com/api/notifications/${id}/read`, {}, {
       headers: { Authorization: `Bearer ${token}` }
     });
     fetchNotifications();

@@ -78,7 +78,7 @@ npm install
 npm run dev
 ```
 
-Backend runs on `http://localhost:5000`
+Backend runs on `https://majifix.onrender.com`
 
 ### 3. Frontend Configuration
 
@@ -173,7 +173,7 @@ heroku config:set DATABASE_URL=postgresql://...
 ## 📚 API Documentation
 
 ### Base URL
-- Local: `http://localhost:5000/api`
+- Local: `https://majifix.onrender.com/api`
 - Production: `https://your-api.com/api`
 
 ### Authentication
@@ -308,7 +308,7 @@ SENDGRID_API_KEY=your_sendgrid_key
 
 ### Frontend (.env)
 ```
-REACT_APP_API_URL=http://localhost:5000/api
+REACT_APP_API_URL=https://majifix.onrender.com/api
 ```
 
 ---

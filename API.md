@@ -2,7 +2,7 @@
 
 ## Base URL
 ```
-http://localhost:5000/api
+https://majifix.onrender.com/api
 ```
 
 ## Authentication
@@ -443,7 +443,7 @@ Response: 201
 
 ### Register
 ```bash
-curl -X POST http://localhost:5000/api/auth/register \
+curl -X POST https://majifix.onrender.com/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "username": "testuser",
@@ -455,7 +455,7 @@ curl -X POST http://localhost:5000/api/auth/register \
 
 ### Login
 ```bash
-curl -X POST http://localhost:5000/api/auth/login \
+curl -X POST https://majifix.onrender.com/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "username": "testuser",
@@ -465,7 +465,7 @@ curl -X POST http://localhost:5000/api/auth/login \
 
 ### Create Technician (admin only)
 ```bash
-curl -X POST http://localhost:5000/api/technicians \
+curl -X POST https://majifix.onrender.com/api/technicians \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_ADMIN_TOKEN" \
   -d '{
@@ -481,13 +481,13 @@ curl -X POST http://localhost:5000/api/technicians \
 
 ### Get Technicians (admin or district officer)
 ```bash
-curl -X GET http://localhost:5000/api/technicians \
+curl -X GET https://majifix.onrender.com/api/technicians \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 ### Get Water Points (with token)
 ```bash
-curl -X GET http://localhost:5000/api/water-points \
+curl -X GET https://majifix.onrender.com/api/water-points \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
 ```
 

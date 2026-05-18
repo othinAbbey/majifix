@@ -38,7 +38,7 @@ services:
     image: node:18-alpine
     working_dir: /app
     environment:
-      REACT_APP_API_URL: http://localhost:5000/api
+      REACT_APP_API_URL: https://majifix.onrender.com/api
     ports:
       - "3000:3000"
     volumes:

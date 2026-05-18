@@ -20,7 +20,7 @@ const Repairs = () => {
 
   const fetchRepairs = async () => {
     const token = localStorage.getItem('token');
-    const response = await axios.get('http://localhost:5000/api/repairs', {
+    const response = await axios.get('https://majifix.onrender.com/api/repairs', {
       headers: { Authorization: `Bearer ${token}` }
     });
     setRepairs(response.data);
@@ -28,7 +28,7 @@ const Repairs = () => {
 
   const fetchAssignments = async () => {
     const token = localStorage.getItem('token');
-    const response = await axios.get('http://localhost:5000/api/assignments', {
+    const response = await axios.get('https://majifix.onrender.com/api/assignments', {
       headers: { Authorization: `Bearer ${token}` }
     });
     setAssignments(response.data);
@@ -36,7 +36,7 @@ const Repairs = () => {
 
   const handleAdd = async () => {
     const token = localStorage.getItem('token');
-    await axios.post('http://localhost:5000/api/repairs', {
+    await axios.post('https://majifix.onrender.com/api/repairs', {
       assignment_id: selectedAssignment,
       transport_cost: transportCost,
       materials_cost: materialsCost,

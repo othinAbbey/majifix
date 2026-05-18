@@ -17,7 +17,7 @@ const Navigation = () => {
     const token = localStorage.getItem('token');
     if (!token) return;
     try {
-      const response = await axios.get('http://localhost:5000/api/notifications', {
+      const response = await axios.get('https://majifix.onrender.com/api/notifications', {
         headers: { Authorization: `Bearer ${token}` }
       });
       const unread = response.data.filter(n => !n.is_read).length;

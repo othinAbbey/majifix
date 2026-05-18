@@ -108,7 +108,7 @@ if exist majifix-frontend\majifix-frontend\.env (
     echo ✅ Frontend .env already exists
 ) else (
     (
-        echo REACT_APP_API_URL=http://localhost:5000/api
+        echo REACT_APP_API_URL=https://majifix.onrender.com/api
     ) > majifix-frontend\majifix-frontend\.env
     echo ✅ Created frontend .env
 )

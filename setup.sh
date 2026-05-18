@@ -73,7 +73,7 @@ echo ""
 
 # Create .env for frontend if needed
 if [ ! -f "majifix-frontend/majifix-frontend/.env" ]; then
-    echo "REACT_APP_API_URL=http://localhost:5000/api" > majifix-frontend/majifix-frontend/.env
+    echo "REACT_APP_API_URL=https://majifix.onrender.com/api" > majifix-frontend/majifix-frontend/.env
     echo "✅ Frontend .env created"
 fi
 echo ""

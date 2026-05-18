@@ -117,7 +117,7 @@ npm start
 
 5. **Access the App**
 - Frontend: http://localhost:3000
-- Backend API: http://localhost:5000/api
+- Backend API: https://majifix.onrender.com/api
 
 ---
 
@@ -129,7 +129,7 @@ docker-compose up
 
 # Access
 # Frontend: http://localhost:3000
-# Backend: http://localhost:5000
+# Backend: https://majifix.onrender.com
 ```
 
 ---

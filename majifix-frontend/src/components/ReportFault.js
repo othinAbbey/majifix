@@ -13,7 +13,7 @@ const ReportFault = () => {
   useEffect(() => {
     const fetchWaterPoints = async () => {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/water-points', {
+      const response = await axios.get('https://majifix.onrender.com/api/water-points', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setWaterPoints(response.data);
@@ -25,7 +25,7 @@ const ReportFault = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://localhost:5000/api/fault-reports', {
+      const response = await axios.post('https://majifix.onrender.com/api/fault-reports', {
         water_point_id: waterPointId,
         issue_type: issueType,
         description,

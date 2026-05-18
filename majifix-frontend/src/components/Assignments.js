@@ -19,7 +19,7 @@
 
 //   const fetchAssignments = async () => {
 //     const token = localStorage.getItem('token');
-//     const response = await axios.get('http://localhost:5000/api/assignments', {
+//     const response = await axios.get('https://majifix.onrender.com/api/assignments', {
 //       headers: { Authorization: `Bearer ${token}` }
 //     });
 //     setAssignments(response.data);
@@ -27,7 +27,7 @@
 
 //   const fetchFaultReports = async () => {
 //     const token = localStorage.getItem('token');
-//     const response = await axios.get('http://localhost:5000/api/fault-reports', {
+//     const response = await axios.get('https://majifix.onrender.com/api/fault-reports', {
 //       headers: { Authorization: `Bearer ${token}` }
 //     });
 //     setFaultReports(response.data);
@@ -37,7 +37,7 @@
 //     const token = localStorage.getItem('token');
 //     if (!token) return;
 //     try {
-//       const response = await axios.get('http://localhost:5000/api/technicians', {
+//       const response = await axios.get('https://majifix.onrender.com/api/technicians', {
 //         headers: { Authorization: `Bearer ${token}` }
 //       });
 //       setTechnicians(response.data);
@@ -49,7 +49,7 @@
 
 //   const handleAssign = async () => {
 //     const token = localStorage.getItem('token');
-//     await axios.post('http://localhost:5000/api/assignments', {
+//     await axios.post('https://majifix.onrender.com/api/assignments', {
 //       fault_report_id: selectedFault,
 //       technician_id: selectedTech
 //     }, {
@@ -61,7 +61,7 @@
 
 //   const updateStatus = async (id, status) => {
 //     const token = localStorage.getItem('token');
-//     await axios.put(`http://localhost:5000/api/assignments/${id}`, { status }, {
+//     await axios.put(`https://majifix.onrender.com/api/assignments/${id}`, { status }, {
 //       headers: { Authorization: `Bearer ${token}` }
 //     });
 //     fetchAssignments();
@@ -176,7 +176,7 @@ const Assignments = () => {
     const token = localStorage.getItem('token');
 
     const response = await axios.get(
-      'http://localhost:5000/api/assignments',
+      'https://majifix.onrender.com/api/assignments',
       {
         headers: { Authorization: `Bearer ${token}` }
       }
@@ -189,7 +189,7 @@ const Assignments = () => {
     const token = localStorage.getItem('token');
 
     const response = await axios.get(
-      'http://localhost:5000/api/fault-reports',
+      'https://majifix.onrender.com/api/fault-reports',
       {
         headers: { Authorization: `Bearer ${token}` }
       }
@@ -205,7 +205,7 @@ const Assignments = () => {
 
     try {
       const response = await axios.get(
-        'http://localhost:5000/api/technicians',
+        'https://majifix.onrender.com/api/technicians',
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -225,7 +225,7 @@ const Assignments = () => {
     const token = localStorage.getItem('token');
 
     await axios.post(
-      'http://localhost:5000/api/assignments',
+      'https://majifix.onrender.com/api/assignments',
       {
         fault_report_id: selectedFault,
         technician_id: selectedTech
@@ -246,7 +246,7 @@ const Assignments = () => {
     const token = localStorage.getItem('token');
 
     await axios.put(
-      `http://localhost:5000/api/assignments/${id}`,
+      `https://majifix.onrender.com/api/assignments/${id}`,
       { status },
       {
         headers: { Authorization: `Bearer ${token}` }

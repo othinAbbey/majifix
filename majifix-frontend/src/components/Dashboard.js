@@ -22,7 +22,7 @@ const Dashboard = () => {
 
   const fetchWaterPoints = async () => {
     const token = localStorage.getItem('token');
-    const response = await axios.get('http://localhost:5000/api/water-points', {
+    const response = await axios.get('https://majifix.onrender.com/api/water-points', {
       headers: { Authorization: `Bearer ${token}` }
     });
     const points = response.data;
@@ -33,7 +33,7 @@ const Dashboard = () => {
 
   const fetchStats = async () => {
     const token = localStorage.getItem('token');
-    const response = await axios.get('http://localhost:5000/api/analytics', {
+    const response = await axios.get('https://majifix.onrender.com/api/analytics', {
       headers: { Authorization: `Bearer ${token}` }
     });
     setStats(response.data);
@@ -41,7 +41,7 @@ const Dashboard = () => {
 
   const fetchNotifications = async () => {
     const token = localStorage.getItem('token');
-    const response = await axios.get('http://localhost:5000/api/notifications', {
+    const response = await axios.get('https://majifix.onrender.com/api/notifications', {
       headers: { Authorization: `Bearer ${token}` }
     });
     const unread = response.data.filter((notification) => !notification.is_read).length;
@@ -51,7 +51,7 @@ const Dashboard = () => {
 
   const fetchAssignmentStatus = async () => {
     const token = localStorage.getItem('token');
-    const response = await axios.get('http://localhost:5000/api/assignments', {
+    const response = await axios.get('https://majifix.onrender.com/api/assignments', {
       headers: { Authorization: `Bearer ${token}` }
     });
     const counts = response.data.reduce(

@@ -8,7 +8,7 @@ const Analytics = () => {
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/analytics', {
+      const response = await axios.get('https://majifix.onrender.com/api/analytics', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setData(response.data);

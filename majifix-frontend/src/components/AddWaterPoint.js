@@ -38,7 +38,7 @@ const AddWaterPoint = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/api/water-points', form, {
+      const response = await axios.post('https://majifix.onrender.com/api/water-points', form, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',

@@ -27,7 +27,7 @@
 //     if (!token) return;
 
 //     try {
-//       const response = await axios.get('http://localhost:5000/api/technicians', {
+//       const response = await axios.get('https://majifix.onrender.com/api/technicians', {
 //         headers: { Authorization: `Bearer ${token}` }
 //       });
 //       setTechnicians(response.data);
@@ -68,7 +68,7 @@
 //           longitude: formTech.longitude || null
 //         };
 
-//         await axios.put(`http://localhost:5000/api/technicians/${editingTechId}`, payload, {
+//         await axios.put(`https://majifix.onrender.com/api/technicians/${editingTechId}`, payload, {
 //           headers: { Authorization: `Bearer ${token}` }
 //         });
 
@@ -88,7 +88,7 @@
 //         longitude: formTech.longitude || null
 //       };
 
-//       await axios.post('http://localhost:5000/api/technicians', payload, {
+//       await axios.post('https://majifix.onrender.com/api/technicians', payload, {
 //         headers: { Authorization: `Bearer ${token}` }
 //       });
 //       setMessage('Technician created successfully');
@@ -124,7 +124,7 @@
 //     if (!token) return;
 
 //     try {
-//       await axios.delete(`http://localhost:5000/api/technicians/${id}`, {
+//       await axios.delete(`https://majifix.onrender.com/api/technicians/${id}`, {
 //         headers: { Authorization: `Bearer ${token}` }
 //       });
 //       setMessage('Technician deleted successfully');
@@ -286,7 +286,7 @@ const Technicians = () => {
 
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/technicians`,
+        `${process.env.REACT_APP_API_URL || 'https://majifix.onrender.com'}/api/technicians`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -338,7 +338,7 @@ const Technicians = () => {
         };
 
         await axios.put(
-          `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/technicians/${editingTechId}`,
+          `${process.env.REACT_APP_API_URL || 'https://majifix.onrender.com'}/api/technicians/${editingTechId}`,
           payload,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -360,7 +360,7 @@ const Technicians = () => {
       };
 
       await axios.post(
-        `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/technicians`,
+        `${process.env.REACT_APP_API_URL || 'https://majifix.onrender.com'}/api/technicians`,
         payload,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -400,7 +400,7 @@ const Technicians = () => {
 
     try {
       await axios.delete(
-        `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/technicians/${id}`,
+        `${process.env.REACT_APP_API_URL || 'https://majifix.onrender.com'}/api/technicians/${id}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
