@@ -15,8 +15,8 @@ const assignmentsRoutes = require('./routes/assignments');
 const repairsRoutes = require('./routes/repairs');
 const analyticsRoutes = require('./routes/analytics');
 const notificationsRoutes = require('./routes/notifications');
-const ussdRoutes = require('./routes/ussd-at2');
-const ussdAtRoutes = require('./routes/ussd');
+const ussdRoutes = require('./routes/ussd');
+const ussdAtRoutes = require('./routes/ussd-at');
 const techniciansRoutes = require('./routes/technicians');
 const smsRoutes = require('./sms');
 
