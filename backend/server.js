@@ -15,9 +15,11 @@ const assignmentsRoutes = require('./routes/assignments');
 const repairsRoutes = require('./routes/repairs');
 const analyticsRoutes = require('./routes/analytics');
 const notificationsRoutes = require('./routes/notifications');
-const ussdRoutes = require('./routes/ussd');
-const ussdAtRoutes = require('./routes/ussd-at');
+const ussdRoutes = require('./routes/ussd-at2');
+const ussdAtRoutes = require('./routes/ussd');
 const techniciansRoutes = require('./routes/technicians');
+const smsRoutes = require('./sms');
+
 
 // Middleware
 app.use(helmet());
@@ -35,6 +37,7 @@ app.use('/api/notifications', notificationsRoutes);
 app.use('/api/technicians', techniciansRoutes);
 app.use('/api/ussd', ussdRoutes);
 app.use('/api/ussd/at', ussdAtRoutes);
+app.use('/api/sms', smsRoutes.router);
 
 // Routes
 app.get('/', (req, res) => {
