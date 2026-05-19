@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const africastalking = require('africastalking');
-
+const app = express();
 // ==========================
 // AFRICAS TALKING SETUP
 // ==========================
@@ -11,7 +11,7 @@ const AT = africastalking({
 });
 
 const sms = AT.SMS;
-
+app.use(express.json());
 // ==========================
 // MIDDLEWARE (optional if you use auth)
 // ==========================
@@ -52,8 +52,8 @@ const sendSMS = async (to, message) => {
 
     const recipient = Array.isArray(to) ? to.join(',') : to;
 
-    console.log("📲 Sending SMS to:", recipient);
-    console.log("📝 Message:", message);
+    console.log("Sending SMS to:", recipient);
+    console.log("Message:", message);
 
     const response = await sms.send({
       to: recipient,
@@ -76,13 +76,13 @@ router.post('/test', async (req, res) => {
   try {
     const { phone, message } = req.body;
 
-    console.log("🔥 TEST SMS TRIGGERED");
-    console.log("📱 Phone:", phone);
-    console.log("💬 Message:", message);
+    console.log("TEST SMS TRIGGERED");
+    console.log("Phone:", phone);
+    console.log("Message:", message);
 
     const formattedPhone = formatPhoneNumber(phone);
 
-    console.log("📲 Formatted:", formattedPhone);
+    console.log("Formatted Phone Number:", formattedPhone);
 
     await sendSMS(formattedPhone, message || "Test SMS from MajiFix");
 
@@ -92,7 +92,7 @@ router.post('/test', async (req, res) => {
     });
 
   } catch (err) {
-    console.log("❌ TEST SMS FAILED:", err.message);
+    console.log("TEST SMS FAILED:", err.message);
 
     res.status(500).json({
       error: err.message

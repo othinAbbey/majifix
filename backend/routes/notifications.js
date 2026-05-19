@@ -303,80 +303,14 @@
 const express = require('express');
 const pool = require('../db');
 const authenticateToken = require('../middleware/auth');
-const twilio = require('twilio');
+const { sendSMS } = require('../utils/faultHelpers');
 
 const router = express.Router();
 
 // ==========================
-// TWILIO SETUP
-// ==========================
-const client = twilio(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
-
-// ==========================
-// MIDDLEWARE
+// AUTH
 // ==========================
 router.use(authenticateToken);
-
-// ==========================
-// PHONE NORMALIZER (UG FIXED)
-// ==========================
-const formatPhoneNumber = (number) => {
-  if (!number) return null;
-
-  number = number.toString().trim();
-
-  // Remove spaces
-  number = number.replace(/\s/g, '');
-
-  if (number.startsWith('0')) {
-    return '+256' + number.substring(1);
-  }
-
-  if (number.startsWith('256')) {
-    return '+' + number;
-  }
-
-  if (number.startsWith('+')) {
-    return number;
-  }
-
-  return null;
-};
-
-// ==========================
-// LOGGING HELPER
-// ==========================
-const log = (title, data) => {
-  console.log(`\n========== ${title} ==========\n`, data, '\n============================\n');
-};
-
-// ==========================
-// SEND SMS (NON-BLOCKING)
-// ==========================
-const sendSMS = async (to, message) => {
-  try {
-    if (!to) {
-      console.log("❌ SMS skipped: no recipient");
-      return;
-    }
-
-    const response = await client.messages.create({
-      body: message,
-      from: process.env.TWILIO_PHONE_NUMBER,
-      to
-    });
-
-    console.log("📲 SMS SENT SUCCESS:", response.sid);
-    return response.sid;
-
-  } catch (error) {
-    console.error("❌ TWILIO FAILED:", error.message);
-    return null;
-  }
-};
 
 // ==========================
 // GET NOTIFICATIONS
@@ -395,29 +329,28 @@ router.get('/', async (req, res) => {
     res.json(result.rows);
 
   } catch (err) {
+    console.log('❌ GET NOTIFICATIONS ERROR:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
 
 // ==========================
-// CREATE NOTIFICATION (NEXT LEVEL)
+// CREATE NOTIFICATION
 // ==========================
 router.post('/', async (req, res) => {
-
-  log("INCOMING REQUEST", req.body);
+  console.log('📩 NOTIFICATION REQUEST:', req.body);
 
   const {
     user_id,
     message,
     type,
-    fault_report_id,
     technician_id,
+    fault_report_id,
   } = req.body;
 
   try {
-
     // ==========================
-    // SAVE NOTIFICATION FIRST
+    // SAVE NOTIFICATION
     // ==========================
     const notificationResult = await pool.query(
       `INSERT INTO notifications (user_id, message, type)
@@ -429,17 +362,16 @@ router.post('/', async (req, res) => {
     const notification = notificationResult.rows[0];
 
     // ==========================
-    // TASK ASSIGNMENT FLOW
+    // TASK ASSIGNMENT SMS FLOW
     // ==========================
     if (type === 'task_assignment') {
-
-      log("TASK ASSIGNMENT TRIGGERED", { technician_id, fault_report_id });
+      console.log('🚀 TASK ASSIGNMENT TRIGGERED');
 
       if (!technician_id) {
         return res.status(400).json({ error: 'technician_id required' });
       }
 
-      // FETCH TECHNICIAN
+      // GET TECHNICIAN
       const techResult = await pool.query(
         `SELECT id, username, contact_number
          FROM users
@@ -448,63 +380,50 @@ router.post('/', async (req, res) => {
       );
 
       if (techResult.rows.length === 0) {
-        console.log("❌ Technician not found");
         return res.status(404).json({ error: 'Technician not found' });
       }
 
       const technician = techResult.rows[0];
 
-      log("SELECTED TECHNICIAN", technician);
-
-      const phone = formatPhoneNumber(technician.contact_number);
-
-      log("FORMATTED PHONE", phone);
-
-      if (!phone) {
-        return res.status(400).json({ error: 'Invalid phone number' });
-      }
+      console.log('👤 TECH:', technician);
 
       // ==========================
-      // SMS CONTENT
+      // IMPORTANT: DO NOT FORMAT HERE
       // ==========================
+      const rawPhone = technician.contact_number;
+
+      console.log('📲 RAW PHONE FROM DB:', rawPhone);
+
       const smsMessage = `
 🔧 MajiFix Alert
 
-New Task Assigned to you:
+New Task Assigned:
 ${message}
 
 Fault ID: ${fault_report_id || 'N/A'}
-
-Please open the system for details.
       `;
 
-      // ==========================
-      // SEND SMS (NON BLOCKING)
-      // ==========================
-      sendSMS(phone, smsMessage);
+      try {
+        console.log('📤 SENDING SMS...');
 
-      // ==========================
-      // OPTIONAL: ADMIN LOG
-      // ==========================
-      const adminResult = await pool.query(
-        `SELECT username FROM users WHERE role = 'admin'`
-      );
+        const result = await sendSMS(rawPhone, smsMessage);
 
-      log("ADMINS NOTIFIED IN SYSTEM (NO SMS REQUIRED)", adminResult.rows);
+        console.log('📡 SMS RESULT:', result);
+
+      } catch (smsErr) {
+        console.log('❌ SMS FAILED:', smsErr.message);
+      }
     }
 
     // ==========================
-    // FAULT REPORT ALERT FLOW (BONUS UPGRADE)
+    // FAULT REPORT SMS FLOW (ADMINS)
     // ==========================
     if (type === 'fault_report') {
+      console.log('🚨 FAULT REPORT TRIGGERED');
 
       const admins = await pool.query(
         `SELECT contact_number FROM users WHERE role = 'admin'`
       );
-
-      const adminPhones = admins.rows
-        .map(a => formatPhoneNumber(a.contact_number))
-        .filter(Boolean);
 
       const smsMessage = `
 🚨 New Fault Report
@@ -514,21 +433,28 @@ ${message}
 Fault ID: ${fault_report_id || 'N/A'}
       `;
 
-      adminPhones.forEach(phone => {
-        sendSMS(phone, smsMessage);
-      });
+      for (const admin of admins.rows) {
+        try {
+          console.log('📤 ADMIN SMS TO:', admin.contact_number);
+
+          await sendSMS(admin.contact_number, smsMessage);
+
+        } catch (err) {
+          console.log('❌ ADMIN SMS FAILED:', err.message);
+        }
+      }
     }
 
     // ==========================
-    // RETURN RESPONSE FAST
+    // RESPONSE
     // ==========================
     res.status(201).json({
       success: true,
-      notification
+      notification,
     });
 
   } catch (err) {
-    console.error("❌ SYSTEM ERROR:", err);
+    console.log('❌ SYSTEM ERROR:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
@@ -550,6 +476,7 @@ router.put('/:id/read', async (req, res) => {
     res.json({ message: 'Notification marked as read' });
 
   } catch (err) {
+    console.log('❌ MARK READ ERROR:', err.message);
     res.status(500).json({ error: err.message });
   }
 });
