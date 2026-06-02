@@ -619,6 +619,14 @@ const Dashboard = () => {
     <Container className="mt-4">
       <h2 className="mb-4">MajiFix Dashboard</h2>
 
+      <Card className="p-3 text-center">
+  <h5>Total System Stats</h5>
+
+  <p>Total Water Points: {stats.waterPoints || 0}</p>
+  <p>Working: {stats.working || 0}</p>
+  <p>Broken: {stats.broken || 0}</p>
+  <p>Assignments: {stats.assignments || 0}</p>
+</Card>
       {/* ================= CHARTS ROW ================= */}
       <Row className="mb-4">
 
@@ -640,6 +648,7 @@ const Dashboard = () => {
           </Card>
         </Col>
 
+        
         {/* ASSIGNMENTS */}
         <Col md={4}>
           <Card className="p-3">
@@ -693,6 +702,8 @@ const Dashboard = () => {
           <Col md={3}>Under Repair: <b>{underRepair}</b></Col>
         </Row>
       </Card>
+
+      
 
       {/* ================= WATER SOURCE TYPE ================= */}
       <Row className="mb-4">
