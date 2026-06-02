@@ -174,7 +174,7 @@ const createWaterPoint = async (data) => {
 
   const result = await pool.query(
     `INSERT INTO water_points
-     (name, district, parish, village, water_point_number, latitude, longitude, install_date, water_source_type, status, managing_org, created_via_ussd)
+     (name, district, parish, village, water_point_code, latitude, longitude, install_date, water_source_type, status, managing_org, created_via_ussd)
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
      RETURNING *`,
     [
