@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Container, Form, Button, Alert, Row, Col, Card } from 'react-bootstrap';
-import axios from 'axios';
+// import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+// const API_URL = process.env.REACT_APP_API_URL;
+import api from "../api/axios";
 const AddWaterPoint = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -38,7 +39,7 @@ const AddWaterPoint = () => {
     }
 
     try {
-      const response = await axios.post('https://majifix.onrender.com/api/water-points', form, {
+      const response = await api.post('/api/water-points', form, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',

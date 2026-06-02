@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Table, Button, Form, Modal } from 'react-bootstrap';
-import axios from 'axios';
-
+// import axios from 'axios';
+// const API_URL = process.env.REACT_APP_API_URL;
+import api from '../api/axios';
 const Repairs = () => {
   const [repairs, setRepairs] = useState([]);
   const [assignments, setAssignments] = useState([]);
@@ -20,7 +21,7 @@ const Repairs = () => {
 
   const fetchRepairs = async () => {
     const token = localStorage.getItem('token');
-    const response = await axios.get('https://majifix.onrender.com/api/repairs', {
+    const response = await api.get(`/api/repairs`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     setRepairs(response.data);
@@ -28,7 +29,7 @@ const Repairs = () => {
 
   const fetchAssignments = async () => {
     const token = localStorage.getItem('token');
-    const response = await axios.get('https://majifix.onrender.com/api/assignments', {
+    const response = await api.get(`/api/assignments`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     setAssignments(response.data);
@@ -36,7 +37,7 @@ const Repairs = () => {
 
   const handleAdd = async () => {
     const token = localStorage.getItem('token');
-    await axios.post('https://majifix.onrender.com/api/repairs', {
+    await api.post(`/api/repairs`, {
       assignment_id: selectedAssignment,
       transport_cost: transportCost,
       materials_cost: materialsCost,

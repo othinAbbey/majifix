@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, Container, Badge } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
+// const API_URL = process.env.REACT_APP_API_URL;
+import api from '../api/axios';
 
 const Navigation = () => {
   const navigate = useNavigate();
@@ -17,7 +19,7 @@ const Navigation = () => {
     const token = localStorage.getItem('token');
     if (!token) return;
     try {
-      const response = await axios.get('https://majifix.onrender.com/api/notifications', {
+      const response = await api.get(`/api/notifications`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const unread = response.data.filter(n => !n.is_read).length;

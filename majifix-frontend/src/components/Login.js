@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Form, Button, Container, Alert } from 'react-bootstrap';
-import axios from 'axios';
-
+// import axios from 'axios';
+// import { useLoading } from './LoadingContext';
+import api from '../api/axios';
+// const API_URL = process.env.REACT_APP_API_URL;
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -10,7 +12,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://majifix.onrender.com/api/auth/login', { username, password });
+      const response = await api.post('/api/auth/login', { username, password });
       localStorage.setItem('token', response.data.token);
       // Redirect to dashboard
       window.location.href = '/dashboard';

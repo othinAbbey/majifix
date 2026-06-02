@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Container, ListGroup, Badge, Button } from 'react-bootstrap';
-import axios from 'axios';
-
+// import axios from 'axios';
+// const API_URL = process.env.REACT_APP_API_URL;
+import api from '../api/axios';
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
 
@@ -11,7 +12,7 @@ const Notifications = () => {
 
   const fetchNotifications = async () => {
     const token = localStorage.getItem('token');
-    const response = await axios.get('https://majifix.onrender.com/api/notifications', {
+    const response = await api.get(`/api/notifications`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     setNotifications(response.data);
@@ -19,7 +20,7 @@ const Notifications = () => {
 
   const markAsRead = async (id) => {
     const token = localStorage.getItem('token');
-    await axios.put(`https://majifix.onrender.com/api/notifications/${id}/read`, {}, {
+    await api.put(`/api/notifications/${id}/read`, {}, {
       headers: { Authorization: `Bearer ${token}` }
     });
     fetchNotifications();

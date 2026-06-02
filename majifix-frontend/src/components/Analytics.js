@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
-import axios from 'axios';
-
+// import axios from 'axios';
+import api from '../api/axios';
+// const API_URL = process.env.REACT_APP_API_URL;
 const Analytics = () => {
   const [data, setData] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem('token');
-      const response = await axios.get('https://majifix.onrender.com/api/analytics', {
+      const response = await api.get('/api/analytics', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setData(response.data);
