@@ -11,7 +11,7 @@ const AddWaterPoint = () => {
     district: '',
     parish: '',
     village: '',
-    water_point_number: '',
+    water_point_code: '',
     latitude: '',
     longitude: '',
     install_date: '',
@@ -51,7 +51,7 @@ const AddWaterPoint = () => {
         district: '',
         parish: '',
         village: '',
-        water_point_number: '',
+        water_point_code: '',
         latitude: '',
         longitude: '',
         install_date: '',
@@ -90,10 +90,10 @@ const AddWaterPoint = () => {
                     />
                   </Col>
                   <Col md={6} className="mb-3">
-                    <Form.Label>Water Point Number</Form.Label>
+                    <Form.Label>Water Point Code</Form.Label>
                     <Form.Control
-                      name="water_point_number"
-                      value={form.water_point_number}
+                      name="water_point_code"
+                      value={form.water_point_code}
                       onChange={handleChange}
                       placeholder="WP-001"
                       required

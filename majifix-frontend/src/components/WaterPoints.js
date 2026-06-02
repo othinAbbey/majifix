@@ -87,7 +87,7 @@
 //               <td>{wp.status}</td>
 //               <td>{wp.parish}</td>
 //               <td>{wp.village}</td>
-//               <td>{wp.water_point_number}</td>
+//               <td>{wp.water_point_code}</td>
 //               <td>{wp.latitude}</td>
 //               <td>{wp.longitude}</td>
 
@@ -197,7 +197,7 @@ const WaterPoints = () => {
               <td>{wp.status}</td>
               <td>{wp.parish}</td>
               <td>{wp.village}</td>
-              <td>{wp.water_point_number}</td>
+              <td>{wp.water_point_code}</td>
               <td>{wp.latitude}</td>
               <td>{wp.longitude}</td>
               <td>
