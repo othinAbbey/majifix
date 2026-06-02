@@ -16,21 +16,66 @@ CREATE TABLE users (
 );
 
 -- Water points table
+-- CREATE TABLE water_points (
+--   id SERIAL PRIMARY KEY,
+--   name VARCHAR(100) NOT NULL,
+--   district VARCHAR(50) NOT NULL,
+--   parish VARCHAR(50),
+--   village VARCHAR(50) NOT NULL,
+--   water_point_number VARCHAR(50),
+--   latitude DECIMAL(10, 8),
+--   longitude DECIMAL(11, 8),
+--   install_date DATE,
+--   water_source_type VARCHAR(50),
+--   status VARCHAR(20) DEFAULT 'working' CHECK (status IN ('working', 'broken', 'maintenance')),
+--   managing_org VARCHAR(100),
+--   created_via_ussd BOOLEAN DEFAULT FALSE,
+--   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
 CREATE TABLE water_points (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  district VARCHAR(50) NOT NULL,
-  parish VARCHAR(50),
-  village VARCHAR(50) NOT NULL,
-  water_point_number VARCHAR(50),
+
+  -- Identity
+  name VARCHAR(150) NOT NULL,
+  water_point_code VARCHAR(50) UNIQUE, -- better than "water_point_number"
+
+  -- Location hierarchy
+  district VARCHAR(80) NOT NULL,
+  parish VARCHAR(80),
+  village VARCHAR(80) NOT NULL,
+
   latitude DECIMAL(10, 8),
   longitude DECIMAL(11, 8),
+
+  -- Water system details
+  water_source_type VARCHAR(50) NOT NULL, 
   install_date DATE,
-  water_source_type VARCHAR(50),
-  status VARCHAR(20) DEFAULT 'working' CHECK (status IN ('working', 'broken', 'maintenance')),
-  managing_org VARCHAR(100),
+
+  -- Operational status
+  status VARCHAR(20) DEFAULT 'working'
+    CHECK (status IN ('working', 'broken', 'maintenance')),
+
+  is_active BOOLEAN DEFAULT TRUE,
+
+  -- Ownership / management
+  managing_org VARCHAR(150),
+
+  -- Digital tracking
   created_via_ussd BOOLEAN DEFAULT FALSE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+  -- 🔥 ML / DATA SCIENCE FIELDS
+  failure_risk_score DECIMAL(3,2) DEFAULT 0, 
+  last_fault_date TIMESTAMP,
+  last_repair_date TIMESTAMP,
+  avg_repair_time_hours DECIMAL(6,2),
+  fault_count_6_months INT DEFAULT 0,
+
+  -- GIS / mapping enhancement
+  accuracy_radius_meters INT DEFAULT 10,
+
+  -- system tracking
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Fault reports table

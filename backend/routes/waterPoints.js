@@ -9,10 +9,36 @@ router.use(authenticateToken);
 // Get all water points
 router.get('/', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM water_points');
-    res.json(result.rows);
+    const result = await pool.query(`
+      SELECT 
+        id,
+        name,
+        district,
+        parish,
+        village,
+        water_point_number,
+        latitude,
+        longitude,
+        status,
+        created_at
+      FROM water_points
+      WHERE latitude IS NOT NULL 
+        AND longitude IS NOT NULL
+      ORDER BY created_at DESC
+    `);
+
+    res.status(200).json({
+      success: true,
+      count: result.rows.length,
+      data: result.rows
+    });
+
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error fetching water points:", err);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch water points"
+    });
   }
 });
 

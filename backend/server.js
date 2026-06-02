@@ -19,6 +19,8 @@ const ussdRoutes = require('./routes/ussd');
 const ussdAtRoutes = require('./routes/ussd-at');
 const techniciansRoutes = require('./routes/technicians');
 const smsRoutes = require('./sms');
+const mapRoutes = require('./routes/maps');
+const mapStatsRoutes = require('./routes/mapStats');
 
 
 // Middleware
@@ -38,6 +40,10 @@ app.use('/api/technicians', techniciansRoutes);
 app.use('/api/ussd', ussdRoutes);
 app.use('/api/ussd/at', ussdAtRoutes);
 app.use('/api/sms', smsRoutes.router);
+
+//maps
+app.use('/api/map', mapRoutes);
+app.use('/api/map-stats', mapStatsRoutes);
 
 // Routes
 app.get('/', (req, res) => {
